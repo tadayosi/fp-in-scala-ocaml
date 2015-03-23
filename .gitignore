@@ -1,0 +1,13 @@
+_build/
+
+.*
+!.gitignore
+*.iml
+
+*.byte
+*.native
+*.exe
+
+configure
+Makefile
+setup.*

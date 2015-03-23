@@ -1,0 +1,25 @@
+OASISFormat: 0.4
+Name:        fp-in-scala-ocaml
+Version:     0.1
+Synopsis:    Functional Programming in Scala exercised in OCaml
+Authors:     Tadayoshi Sato
+License:     Apache-2.0
+BuildTools:  ocamlbuild
+Plugins:     META (0.4), DevFiles (0.4)
+
+Library main
+  Path: src
+  Modules:
+
+Executable test
+  Path: test
+  MainIs: tests.ml
+  Install: false
+  Build$: flag(tests)
+  BuildDepends:
+    main,
+    qcheck (>= 0.3)
+
+Test main
+  Run$: flag(tests)
+  Command: $test
