@@ -10,6 +10,7 @@ Plugins:     META (0.4), DevFiles (0.4)
 Library main
   Path: src
   Modules:
+    Getting_started
 
 Executable test
   Path: test
@@ -18,6 +19,7 @@ Executable test
   Build$: flag(tests)
   BuildDepends:
     main,
+    oUnit (>= 2.0.0),
     qcheck (>= 0.3)
 
 Test main
