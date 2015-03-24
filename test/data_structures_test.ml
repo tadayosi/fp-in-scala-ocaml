@@ -1,6 +1,22 @@
 open OUnit2
 open QCheck
-open Data_structures
+open Data_structures.List
+
+let list_prop = mk_test ~name:"list"
+  Arbitrary.(triple small_int small_int small_int)
+  (fun (a, b, c) -> list [a; b; c] = Cons(a, Cons(b, Cons(c, Nil))))
+
+let tail_prop = mk_test ~name:"tail" ~pp:PP.(list int)
+  Arbitrary.(list small_int)
+  (fun xs -> match xs with
+    | [] -> tail (list xs) = Nil
+    | _ -> tail (list xs) = list (List.tl xs))
+
+let set_head_prop = mk_test ~name:"set_head" ~pp:PP.(list int)
+  Arbitrary.(list small_int)
+  (fun xs -> match xs with
+    | [] -> set_head (list xs) 1 = Cons(1, Nil)
+    | _ -> set_head (list xs) 1 = list (1 :: List.tl xs))
 
 let sum_prop = mk_test ~name:"sum"
   Arbitrary.(triple small_int small_int small_int)
@@ -13,14 +29,12 @@ let product_prop = mk_test ~name:"product"
     let act = a *. b *. c in
     act -. 0.01 < res && res < act +. 0.01)
 
-let list_prop = mk_test ~name:"list"
-  Arbitrary.(triple small_int small_int small_int)
-  (fun (a, b, c) -> list [a; b; c] = Cons(a, Cons(b, Cons(c, Nil))))
-
 let props = [
+  list_prop;
+  tail_prop;
+  set_head_prop;
   sum_prop;
   product_prop;
-  list_prop;
 ]
 
 let tests = "Chapter 3" >::: [
