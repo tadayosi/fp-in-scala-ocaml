@@ -19,10 +19,6 @@ module List = struct
     | Cons (x, xs') when f x -> drop_while xs' f
     | _ -> xs
 
-  let rec append xs ys = match xs with
-    | Nil -> ys
-    | Cons (x, xs') -> Cons (x, append xs' ys)
-
   let set_head xs h = match xs with
     | Nil -> Cons (h, Nil)
     | Cons (_, xs') -> Cons (h, xs')
@@ -31,12 +27,32 @@ module List = struct
     | Nil | Cons (_, Nil) -> Nil
     | Cons (x, xs') -> Cons (x, init xs')
 
-  let rec sum ints = match ints with
-    | Nil -> 0
-    | Cons (x, xs) -> x + sum xs
+  let rec fold_left xs z f = match xs with
+    | Nil -> z
+    | Cons (x, xs') -> fold_left xs' (f z x) f
 
-  let rec product fs = match fs with
-    | Nil -> 1.0
-    | Cons (0.0, _) -> 0.0
-    | Cons (x, xs) -> x *. product xs
+  let rec fold_right xs z f = match xs with
+    | Nil -> z
+    | Cons (x, xs') -> f x (fold_right xs' z f)
+
+  let length xs =
+    fold_left xs 0 (fun len _ -> len + 1)
+
+  let reverse xs =
+    fold_left xs Nil (fun xs' x -> Cons (x, xs'))
+
+  let fold_right_tailrec xs z f =
+    fold_left (reverse xs) z (fun x y -> f y x)
+
+  let append xs ys =
+    fold_right_tailrec xs ys (fun x ys' -> Cons (x, ys'))
+
+  let rec concat xss =
+    fold_right_tailrec xss Nil append
+
+  let rec sum ns =
+    fold_left ns 0 (fun x y -> x + y)
+
+  let rec product ns =
+    fold_left ns 1.0 (fun x y -> x *. y)
 end
