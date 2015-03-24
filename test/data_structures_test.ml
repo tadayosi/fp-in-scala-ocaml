@@ -32,6 +32,10 @@ let set_head_prop = mk_test ~name:"set_head" ~pp:PP.(list int)
     | [] -> set_head (list xs) 1 = Cons (1, Nil)
     | _ -> set_head (list xs) 1 = list (1 :: List.tl xs))
 
+let init_prop = mk_test ~name:"init" ~pp:PP.(pair (list int) int)
+  Arbitrary.(pair (list small_int) small_int)
+  (fun (xs, x) -> init (list (xs @ [x])) = list xs)
+
 let sum_prop = mk_test ~name:"sum"
   Arbitrary.(triple small_int small_int small_int)
   (fun (a, b, c) -> sum(Cons (a, Cons (b, Cons (c, Nil)))) = a + b + c)
@@ -50,6 +54,7 @@ let props = [
   drop_while_prop;
   append_prop;
   set_head_prop;
+  init_prop;
   sum_prop;
   product_prop;
 ]

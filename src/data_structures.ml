@@ -27,6 +27,10 @@ module List = struct
     | Nil -> Cons (h, Nil)
     | Cons (_, xs') -> Cons (h, xs')
 
+  let rec init xs = match xs with
+    | Nil | Cons (_, Nil) -> Nil
+    | Cons (x, xs') -> Cons (x, init xs')
+
   let rec sum ints = match ints with
     | Nil -> 0
     | Cons (x, xs) -> x + sum xs
