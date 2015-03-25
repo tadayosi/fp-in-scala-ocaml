@@ -1,4 +1,5 @@
 module List = struct
+
   type 'a list = Nil | Cons of 'a * 'a list
 
   let rec list xs = match xs with
@@ -57,7 +58,12 @@ module List = struct
     concat (map xs f)
 
   let filter xs f =
-    fold_right_tailrec xs Nil (fun x xs' -> if f x then Cons (x, xs') else xs')
+    flat_map xs (fun x -> if f x then list [x] else Nil)
+
+  let rec zip_with xs1 xs2 f = match (xs1, xs2) with
+    | (Nil, _) -> Nil
+    | (_, Nil) -> Nil
+    | (Cons (x1, xs1'), Cons (x2, xs2')) -> Cons (f x1 x2, zip_with xs1' xs2' f)
 
   (* ------------------------------------------------------------------------ *)
 
@@ -72,4 +78,8 @@ module List = struct
 
   let float_to_string ns =
     fold_right_tailrec ns Nil (fun n ss -> Cons (string_of_float n, ss))
+
+  let rec add_pairwise ns1 ns2 =
+    zip_with ns1 ns2 (fun x y -> x + y)
+
 end
