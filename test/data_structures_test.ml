@@ -67,6 +67,15 @@ let product_prop = mk_test ~name:"product"
     let act = a *. b *. c in
     act -. 0.01 < res && res < act +. 0.01)
 
+let add1_prop = mk_test ~name:"add1" ~pp:PP.(list int)
+  Arbitrary.(list small_int)
+  (fun xs -> add1 (list xs) = list (List.map (fun x -> x + 1) xs))
+
+let float_to_string_prop = mk_test ~name:"float_to_string" ~pp:PP.(list float)
+  Arbitrary.(list (float 10.0))
+  (fun fs ->
+    float_to_string (list fs) = list (List.map (fun x -> string_of_float x) fs))
+
 let props = [
   list_prop;
   tail_prop;
@@ -81,7 +90,11 @@ let props = [
   concat_prop;
   sum_prop;
   product_prop;
+  add1_prop;
+  float_to_string_prop;
 ]
+
+(* -------------------------------------------------------------------------- *)
 
 let tests = "Chapter 3" >::: [
   "ex 3.1" >::
@@ -90,11 +103,19 @@ let tests = "Chapter 3" >::: [
         | Cons (x, Cons (2, Cons (4, _))) -> x
         | Nil -> 42
         | Cons (x, Cons (y, Cons (3, Cons (4, _)))) -> x + y
-        | Cons (h, t) -> h + sum t
+        | Cons (x, xs') -> x + sum xs'
         | _ -> 101));
 
   "ex 3.8" >::
     (fun _ -> let xs = list [1; 2; 3] in
       assert_equal xs
       (fold_right xs Nil (fun x y -> Cons (x, y))));
+
+  "ex 3.19" >::
+    (fun _ -> assert_equal (list [2; 4])
+      (filter (list [1; 2; 3; 4; 5]) (fun x -> x mod 2 = 0)));
+
+  "ex 3.20" >::
+    (fun _ -> assert_equal (list [1; 1; 2; 2; 3; 3])
+      (flat_map (list [1; 2; 3]) (fun x -> list [x; x])));
 ]

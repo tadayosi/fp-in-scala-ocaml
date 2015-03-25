@@ -47,12 +47,29 @@ module List = struct
   let append xs ys =
     fold_right_tailrec xs ys (fun x ys' -> Cons (x, ys'))
 
-  let rec concat xss =
+  let concat xss =
     fold_right_tailrec xss Nil append
 
-  let rec sum ns =
+  let map xs f =
+    fold_right_tailrec xs Nil (fun x xs' -> Cons (f x, xs'))
+
+  let flat_map xs f =
+    concat (map xs f)
+
+  let filter xs f =
+    fold_right_tailrec xs Nil (fun x xs' -> if f x then Cons (x, xs') else xs')
+
+  (* ------------------------------------------------------------------------ *)
+
+  let sum ns =
     fold_left ns 0 (fun x y -> x + y)
 
-  let rec product ns =
+  let product ns =
     fold_left ns 1.0 (fun x y -> x *. y)
+
+  let add1 ns =
+    fold_right_tailrec ns Nil (fun n ns' -> Cons (n + 1, ns'))
+
+  let float_to_string ns =
+    fold_right_tailrec ns Nil (fun n ss -> Cons (string_of_float n, ss))
 end
