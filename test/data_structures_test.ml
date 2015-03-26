@@ -58,9 +58,15 @@ let concat_prop = mk_test ~name:"concat" ~pp:PP.(list (list int))
 
 let zip_with_prop = mk_test ~name:"zip_with" ~pp:PP.(pair (list int) (list int))
   Arbitrary.(pair (list_repeat 10 small_int) (list_repeat 10 small_int))
-  (fun (xs1, xs2) ->
+  (fun (xs, ys) ->
     let f x y = x + y in
-    zip_with (list xs1) (list xs2) f = list (List.map2 f xs1 xs2))
+    zip_with (list xs) (list ys) f = list (List.map2 f xs ys))
+
+let has_subsequence_prop = mk_test ~name:"has_subsequence"
+  ~pp:PP.(triple (list int) (list int) (list int))
+  Arbitrary.(triple (list small_int) (list small_int) (list small_int))
+  (fun (xs, ys, zs) ->
+    has_subsequence (list (xs @ ys @ zs)) (list ys))
 
 let sum_prop = mk_test ~name:"sum"
   Arbitrary.(triple small_int small_int small_int)
@@ -95,6 +101,7 @@ let props = [
   fold_right_tailrec_prop;
   concat_prop;
   zip_with_prop;
+  has_subsequence_prop;
 
   sum_prop;
   product_prop;
@@ -130,4 +137,19 @@ let tests = "Chapter 3" >::: [
   "ex 3.22" >::
     (fun _ -> assert_equal (list [5; 7; 9])
       (add_pairwise (list [1; 2; 3]) (list [4; 5; 6])));
+
+  "ex 3.24" >::
+    (fun _ ->
+      assert_equal ~msg:"1" true
+        (has_subsequence (list [1; 2; 3; 4]) (list [1; 2]));
+      assert_equal ~msg:"2" true
+        (has_subsequence (list [1; 2; 3; 4]) (list [2; 3]));
+      assert_equal ~msg:"3" true
+        (has_subsequence (list [1; 2; 3; 4]) (list [4]));
+      assert_equal ~msg:"4" true
+        (has_subsequence (list [1; 2; 3; 4]) (list []));
+      assert_equal ~msg:"5" false
+        (has_subsequence (list [1; 2; 3; 4]) (list [1; 3]));
+    )
+
 ]

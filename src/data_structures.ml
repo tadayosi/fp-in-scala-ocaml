@@ -65,6 +65,17 @@ module List = struct
     | (_, Nil) -> Nil
     | (Cons (x1, xs1'), Cons (x2, xs2')) -> Cons (f x1 x2, zip_with xs1' xs2' f)
 
+  let rec has_subsequence sup sub =
+    let rec starts_with xs p = match (xs, p) with
+      | (_, Nil) -> true
+      | (Cons (x', xs'), Cons (p1, p')) when x' = p1 ->
+          starts_with xs' p'
+      | _ -> false in
+    match sup with
+    | Nil -> sub = Nil
+    | _ when starts_with sup sub -> true
+    | Cons (h, t) -> has_subsequence t sub
+
   (* ------------------------------------------------------------------------ *)
 
   let sum ns =
