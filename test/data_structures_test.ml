@@ -1,6 +1,7 @@
 open OUnit2
 open QCheck
 open Data_structures.List
+open Data_structures.Tree
 
 let list_prop = mk_test ~name:"list"
   Arbitrary.(triple small_int small_int small_int)
@@ -150,6 +151,11 @@ let tests = "Chapter 3" >::: [
         (has_subsequence (list [1; 2; 3; 4]) (list []));
       assert_equal ~msg:"5" false
         (has_subsequence (list [1; 2; 3; 4]) (list [1; 3]));
-    )
+    );
 
+  "ex 3.25" >::
+    (fun _ -> assert_equal 7
+      (size (Branch (
+        Branch ((Leaf "a"), (Leaf "b")),
+        Branch ((Leaf "c"), (Leaf "d"))))));
 ]

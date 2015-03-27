@@ -94,3 +94,13 @@ module List = struct
     zip_with ns1 ns2 (fun x y -> x + y)
 
 end
+
+module Tree = struct
+
+  type 'a tree = Leaf of 'a | Branch of 'a tree * 'a tree
+
+  let rec size t = match t with
+    | Leaf (_) -> 1
+    | Branch (l, r) -> 1 + size l + size r
+
+end
