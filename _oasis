@@ -7,10 +7,14 @@ License:     Apache-2.0
 BuildTools:  ocamlbuild
 Plugins:     META (0.4), DevFiles (0.4)
 
+AlphaFeatures: ocamlbuild_more_args
+XOCamlbuildExtraArgs: -cflag -safe-string
+
 Library main
   Path: src
   Modules:
-    Getting_started
+    Getting_started,
+    Data_structures
 
 Executable test
   Path: test
