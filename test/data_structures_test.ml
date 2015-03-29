@@ -158,4 +158,26 @@ let tests = "Chapter 3" >::: [
       (size (Branch (
         Branch ((Leaf "a"), (Leaf "b")),
         Branch ((Leaf "c"), (Leaf "d"))))));
+
+  "ex 3.26" >::
+    (fun _ -> assert_equal 4
+      (maximum (Branch (
+        Branch ((Leaf 1), (Leaf 2)),
+        Branch ((Leaf 3), (Leaf 4))))));
+
+  "ex 3.27" >::
+    (fun _ -> assert_equal 2
+      (depth (Branch (
+        Branch ((Leaf "a"), (Leaf "b")),
+        Branch ((Leaf "c"), (Leaf "d"))))));
+
+  "ex 3.28" >::
+    (fun _ -> assert_equal
+      (Branch (
+        Branch ((Leaf 2), (Leaf 3)),
+        Branch ((Leaf 4), (Leaf 5))))
+      (map (Branch (
+        Branch ((Leaf 1), (Leaf 2)),
+        Branch ((Leaf 3), (Leaf 4))))
+        ((+) 1)));
 ]

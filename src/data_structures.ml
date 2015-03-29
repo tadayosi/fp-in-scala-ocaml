@@ -69,7 +69,7 @@ module List = struct
     let rec starts_with xs p = match (xs, p) with
       | (_, Nil) -> true
       | (Cons (x', xs'), Cons (p1, p')) when x' = p1 ->
-          starts_with xs' p'
+        starts_with xs' p'
       | _ -> false in
     match sup with
     | Nil -> sub = Nil
@@ -102,5 +102,17 @@ module Tree = struct
   let rec size t = match t with
     | Leaf (_) -> 1
     | Branch (l, r) -> 1 + size l + size r
+
+  let rec maximum t = match t with
+    | Leaf (x) -> x
+    | Branch (l, r) -> max (maximum l) (maximum r)
+
+  let rec depth t = match t with
+    | Leaf (_) -> 0
+    | Branch (l, r) -> 1 + max (depth l) (depth r)
+
+  let rec map t f = match t with
+    | Leaf (x) -> Leaf (f x)
+    | Branch (l, r) -> Branch (map l f, map r f)
 
 end
