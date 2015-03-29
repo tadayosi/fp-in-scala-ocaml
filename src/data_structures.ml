@@ -99,20 +99,20 @@ module Tree = struct
 
   type 'a tree = Leaf of 'a | Branch of 'a tree * 'a tree
 
-  let rec size t = match t with
-    | Leaf (_) -> 1
-    | Branch (l, r) -> 1 + size l + size r
+  let rec fold t f g = match t with
+    | Leaf (x) -> f x
+    | Branch (l, r) -> g (fold l f g) (fold r f g)
 
-  let rec maximum t = match t with
-    | Leaf (x) -> x
-    | Branch (l, r) -> max (maximum l) (maximum r)
+  let size t =
+    fold t (fun _ -> 1) (fun l r -> 1 + l + r)
 
-  let rec depth t = match t with
-    | Leaf (_) -> 0
-    | Branch (l, r) -> 1 + max (depth l) (depth r)
+  let maximum t =
+    fold t (fun x -> x) (fun l r -> max l r)
 
-  let rec map t f = match t with
-    | Leaf (x) -> Leaf (f x)
-    | Branch (l, r) -> Branch (map l f, map r f)
+  let depth t =
+    fold t (fun _ -> 0) (fun l r -> 1 + max l r)
+
+  let map t f =
+    fold t (fun x -> Leaf (f x)) (fun l r -> Branch (l, r))
 
 end
