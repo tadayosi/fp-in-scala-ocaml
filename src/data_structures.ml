@@ -1,6 +1,6 @@
 module List = struct
 
-  type 'a list = Nil | Cons of 'a * 'a list
+  type 'a t = Nil | Cons of 'a * 'a t
 
   let rec list xs = match xs with
     | [] -> Nil
@@ -97,7 +97,7 @@ end
 
 module Tree = struct
 
-  type 'a tree = Leaf of 'a | Branch of 'a tree * 'a tree
+  type 'a t = Leaf of 'a | Branch of 'a t * 'a t
 
   let rec fold t f g = match t with
     | Leaf (x) -> f x
