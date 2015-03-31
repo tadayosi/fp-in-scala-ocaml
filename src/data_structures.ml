@@ -63,7 +63,8 @@ module List = struct
   let rec zip_with xs1 xs2 f = match (xs1, xs2) with
     | (Nil, _) -> Nil
     | (_, Nil) -> Nil
-    | (Cons (x1, xs1'), Cons (x2, xs2')) -> Cons (f x1 x2, zip_with xs1' xs2' f)
+    | (Cons (x1, xs1'), Cons (x2, xs2')) ->
+      Cons (f x1 x2, zip_with xs1' xs2' f)
 
   let rec has_subsequence sup sub =
     let rec starts_with xs p = match (xs, p) with
@@ -76,7 +77,12 @@ module List = struct
     | _ when starts_with sup sub -> true
     | Cons (h, t) -> has_subsequence t sub
 
-  (* ------------------------------------------------------------------------ *)
+
+  let string_of_list f xs =
+    let s = fold_left xs "" (fun s x -> s ^ f x ^ "; ") in
+    "[" ^ (String.sub s 0 (String.length s - 2)) ^ "]"
+
+  (* ---------------------------------------------------- *)
 
   let sum ns =
     fold_left ns 0 (fun x y -> x + y)
