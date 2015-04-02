@@ -64,6 +64,28 @@ module Either = struct
     try Right (Lazy.force x)
     with e -> Left e
 
+  let map e f = match e with
+    | Left x -> Left x
+    | Right x -> Right (f x)
+
+  let flat_map e f = match e with
+    | Left x -> Left x
+    | Right x -> f x
+
+  let or_else e1 e2 = match e1 with
+    | Left _ -> Lazy.force e2
+    | Right x -> Right x
+
+  let map2 e1 e2 f =
+    flat_map e1 (fun x -> map e2 (f x))
+
+  let traverse xs f =
+    List.fold_right_tailrec xs (Right List.Nil)
+      (fun x le -> map2 (f x) le (fun x xs -> List.Cons (x, xs)))
+
+  let sequence es =
+    traverse es (fun x -> x)
+
 
   let string_of_either f g e = match e with
     | Left x -> "Left " ^ f x
