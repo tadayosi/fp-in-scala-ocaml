@@ -42,16 +42,42 @@ module Option  = struct
   (* ---------------------------------------------------- *)
 
   let mean xs =
-    if List.length xs = 0 then None
+    if List.is_empty xs then None
     else Some (
-      (List.fold_left xs 0. (+.))
-      /.
-      float_of_int (List.length xs))
+        (List.fold_left xs 0. (+.))
+        /.
+        float_of_int (List.length xs))
 
   let variance xs =
     flat_map (mean xs)
       (fun m -> mean (List.map xs (fun x -> (x -. m) ** 2.)))
 
   let abs_o = lift abs_float
+
+end
+
+module Either = struct
+
+  type ('a, 'b) t = Left of 'a | Right of 'b
+
+  let try_ x =
+    try Right (Lazy.force x)
+    with e -> Left e
+
+
+  let string_of_either f g e = match e with
+    | Left x -> "Left " ^ f x
+    | Right x -> "Right " ^ g x
+
+  (* ---------------------------------------------------- *)
+
+  let mean xs =
+    if List.is_empty xs then Left "mean of empty list!"
+    else Right (
+        (List.fold_left xs 0. (+.))
+        /.
+        float_of_int (List.length xs))
+
+  let safe_div x y = try_ (lazy (x / y))
 
 end

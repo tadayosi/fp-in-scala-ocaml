@@ -39,6 +39,9 @@ module List = struct
   let length xs =
     fold_left xs 0 (fun len _ -> len + 1)
 
+  let is_empty xs =
+    length xs = 0
+
   let reverse xs =
     fold_left xs Nil (fun xs' x -> Cons (x, xs'))
 
